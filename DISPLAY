@@ -19,8 +19,8 @@ then
   [Rr][Ee][Ff])word=reference;;
   *)word=undefined;;
  esac
- tput cup 9 20:echo "Category:$word"
- tput cup 10 22:echo "Status:$status"
+ tput cup 9 20;echo "Category:$word"
+ tput cup 10 22;echo "Status:$status"
  if [ "$status" = "out" ]
  then
   tput cup 11 14;echo "Checked out by:$bname"
@@ -37,4 +37,5 @@ case $answer in
 esac
 done
 IFS="$OLD_IFS"
+rm TEMP
 exit 0
