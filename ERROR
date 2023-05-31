@@ -1,0 +1,5 @@
+tput cup $1 $2
+echo "Wrong Input. Try Again."
+echo -e "Press any key to continue...>_\b\c"
+read answer
+exit 0
