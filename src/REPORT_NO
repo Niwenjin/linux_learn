@@ -23,7 +23,6 @@ then
 fi
 echo >> PTEMP
 done < TEMP
-tput clear
-pr PTEMP
+less PTEMP
 rm TEMP PTEMP
 exit 0
