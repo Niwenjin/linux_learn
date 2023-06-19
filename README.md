@@ -1,2 +1,2 @@
-Unix Library Application
-use ./ULIB to boot the system
+#Unix Library Application
+UNIX图书管理系统
