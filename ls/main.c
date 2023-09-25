@@ -12,7 +12,9 @@ char *getmode(mode_t);
 char *gettime(struct timespec);
 
 int main(int argc, char *argv[]) {
+  // 打开当前目录
   DIR *dirp = opendir(".");
+  // 出错检查
   if (NULL == dirp) {
     fprintf(stderr, "fail to open current directory\n");
     return -1;
@@ -22,18 +24,24 @@ int main(int argc, char *argv[]) {
   struct dirent *dir = NULL;
 
   while ((dir = readdir(dirp)) != NULL) {
+    // 忽略隐藏文件
     if (dir->d_name[0] == '.')
       continue;
-    stat(dir->d_name, &buf);
+    lstat(dir->d_name, &buf);
 
+    // 读取各项所需的文件属性
+
+    // 自定义函数获取文件类型及权限位
     char *mode = getmode(buf.st_mode);
     unsigned nlink = buf.st_nlink;
     char *uname = getpwuid(buf.st_uid)->pw_name;
     char *gname = getgrgid(buf.st_gid)->gr_name;
     long size = buf.st_size;
+    // 自定义函数格式化文件时间
     char *mtime = gettime(buf.st_mtim);
     char *filename = dir->d_name;
 
+    // 格式化打印各项文件属性
     printf("%s %d %s %s %ld %s %s\n", mode, nlink, uname, gname, size, mtime,
            filename);
   }
@@ -74,9 +82,12 @@ char *getmode(mode_t st_mode) {
   mode[0] = type;
 
   // 获取文件权限
+  
   int k = 0400;
   int i = 0;
+  // 逐位判断文件权限
   while (i < 9) {
+    // 将读、写、执行权限打印为'r''w''x'
     mode[++i] = (st_mode & k) == k ? 'r' : '-';
     k >>= 1;
     mode[++i] = (st_mode & k) == k ? 'w' : '-';
@@ -91,48 +102,9 @@ char *getmode(mode_t st_mode) {
 char *gettime(struct timespec st_mtim) {
   static char time[13];
   struct tm tm;
+  // 获取timespec结构中的秒级精度时间并转换为tm结构
   localtime_r(&st_mtim.tv_sec, &tm);
-
-  char *month;
-  switch (tm.tm_mon) {
-  case (0):
-    month = "Jan";
-    break;
-  case (1):
-    month = "Feb";
-    break;
-  case (2):
-    month = "Mar";
-    break;
-  case (3):
-    month = "Apr";
-    break;
-  case (4):
-    month = "May";
-    break;
-  case (5):
-    month = "Jun";
-    break;
-  case (6):
-    month = "Jul";
-    break;
-  case (7):
-    month = "Aug";
-    break;
-  case (8):
-    month = "Sep";
-    break;
-  case (9):
-    month = "Oct";
-    break;
-  case (10):
-    month = "Nov";
-    break;
-  case (11):
-    month = "Dec";
-    break;
-  }
-
-  sprintf(time, "%s %d %d:%d", month, tm.tm_mday, tm.tm_hour, tm.tm_min);
+  // 将tm结构时间格式化为“月 日 时：分”的格式返回
+  strftime(time, sizeof(time), "%b %d %H:%M", &tm);
   return time;
 }
