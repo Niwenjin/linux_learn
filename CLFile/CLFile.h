@@ -1,22 +1,28 @@
 #ifndef CLFILE_H
 #define CLFILE_H
-#include <string>
 #include <sys/types.h>
 
 #define MAX_SIZE 4096
 
 class CLFile {
 public:
-  CLFile();
+  CLFile(const char *);
   ~CLFile();
   int readwithBuf(char *, int, int);
   int writewithBuf(char *, int, int);
-  int lseek(off_t, int);
+  off_t seek(off_t);
+  off_t seek(off_t, int);
 
 private:
+  int m_fd;
+  off_t m_pos;
+  off_t m_readbufpos;
+  off_t m_writebufpos;
+  int m_writebufsize;
   char readbuf[MAX_SIZE];
   char writebuf[MAX_SIZE];
-  int open(const char *);
-  int close(int);
+  int openfile(const char *);
+  int closefile();
+  int flushwritebuf();
 };
 #endif
