@@ -49,8 +49,9 @@ int CLFile::readwithBuf(char *readbuf, int size) {
     std::cerr << "Read out_of_range" << std::endl;
     return -1;
   }
-  
+
   memcpy(readbuf, &buf[m_pos - m_bufpos], size);
+  readbuf[size] = '\0';
   m_pos += size;
 
   return size;
