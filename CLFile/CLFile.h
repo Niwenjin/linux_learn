@@ -10,8 +10,7 @@ public:
   ~CLFile();
   int readwithBuf(char *, int);
   int writewithBuf(const char *, int);
-  off_t seek(off_t);
-  off_t seek(off_t, int);
+  off_t seekwithBuf(off_t, int);
 
 private:
   int m_fd;
@@ -20,8 +19,10 @@ private:
   int m_bufsize;
   char buf[MAX_SIZE];
   bool m_iswrite;
+  int m_countr = 1, m_countw = 0, m_counts = 0;
   int openfile(const char *);
   int closefile();
+  off_t seek(off_t, int);
   void flushbuf();
   void renewbuf();
 };

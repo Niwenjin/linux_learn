@@ -5,12 +5,14 @@
 using namespace std;
 
 int main() {
-  CLFile f("hello.txt");
-  f.writewithBuf("hello ", 10);
-  f.writewithBuf("world!", 10);
+  CLFile f("file.txt");
   char s[10];
-  f.seek(0, SEEK_SET);
-  f.readwithBuf(s, 30);
+  f.readwithBuf(s, 20);
+  cout << s << endl;
+  f.writewithBuf("hello ", 6);
+  f.writewithBuf("world!", 6);
+  f.seekwithBuf(20, SEEK_SET);
+  f.readwithBuf(s, 10);
   cout << s << endl;
   return 0;
 }
